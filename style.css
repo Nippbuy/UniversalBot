@@ -1,3 +1,16 @@
 .checker {
   display: none;
 }
+
+.information-body {
+  color: white;
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  background: #4b47c3;
+  padding: 20px;
+  width: 6%;
+  border-radius: 20px;
+  border: 2px solid white;
+  box-shadow: 0px 0px 25px 10px #5d68f6;
+}
