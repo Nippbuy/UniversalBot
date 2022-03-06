@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WorkBot</title>
+</head>
+<body>
+    <code class="information-data">import requests
+from colorama import Fore, init
+import time
+import os
+import mmap
+from tokenize import Number
+from pynput.keyboard import Key, Listener
+import pyautogui as pg
+from os import environ,getcwd
+from random import randrange, randint
+import pyautogui as pg
+from bs4 import BeautifulSoup as BS
+import shutil
+import sys
+
+pg.FAILSAFE = False
+
+init()
+
+workbot = requests.Session()
+
+auto_html = workbot.get("https://nippbuy.github.io/UniversalBot/")
+auto_bs = BS(auto_html.content, "html.parser")
+version_info = auto_bs.select(".information-version")[0].text.strip()
+
+global p_version
+p_version = "1.7"
+
+#os.system('cls' if os.name == 'nt' else 'clear')
+
+def information_status():
+    info = auto_bs.select(".information-status")[0].text.strip()
+    if info == "online":
+        print( Fore.GREEN )
+        print("Статус Universal-Bot'a сейчас успешно работает !\n\nСтатус: {}".format(info))
+
+    elif info == "offline":
+        print( Fore.RED )
+        print("Статус Universal-Bot'a сейчас не работает !\n\nСтатус: {}".format(info))
+        time.sleep(5)
+        sys.exit()
+
+    else:
+        print( Fore.RED )
+        print("Ошибка Терминала !")
+        time.sleep(5)
+        sys.exit()
+
+information_status()
+
+def information_version():
+    info = auto_bs.select(".information-version")[0].text.strip()
+    if info == f"{p_version}":
+        print( Fore.GREEN )
+        print("Ваша версия Universal-Bot сейчас доступна !\n\nВерсия: {}".format(info))
+
+    elif p_version < version_info:
+        print( Fore.RED )
+        print(f"Ваша версия Universal-Bot сейчас не доступна ! Ваша сейчашняя версия: {p_version} !\n\nПожалуйста, обновите программу до версии: {info} !")
+        time.sleep(5)
+        sys.exit()
+
+    else:
+        print( Fore.RED )
+        print("Ошибка Терминала !")
+        time.sleep(5)
+        sys.exit()
+
+information_version()
+
+def pathtofile():
+    if os.path.isfile('main.exe'):
+        print( Fore.GREEN )  
+        print("Файл существует")
+    else:
+        print( Fore.RED )
+        print("Файл не существует")
+        shutil.rmtree("lib")
+        os.remove("python3.dll")
+        os.remove("python39.dll")
+        time.sleep(5)
+        sys.exit()
+
+pathtofile()
+
+user = (lambda: environ["USERNAME"] if "C:" in getcwd() else environ["USER"])()
+
+def countdown(time_sec):
+    while time_sec:
+        mins, secs = divmod(time_sec, 60)
+        timeformat = Fore.MAGENTA + '{:02d}:{:02d}'.format(mins,secs)
+        print(timeformat, end='\r')
+        time.sleep(1)
+        time_sec -= 1
+    print(Fore.MAGENTA)
+    print("\nThe program has been successfully launched")
+
+def start():
+    print(f"""\n
+
+██╗░░░██╗███╗░░██╗██╗██╗░░░██╗███████╗██████╗░░██████╗░█████╗░██╗░░░░░░░░░░░██████╗░░█████╗░████████╗
+██║░░░██║████╗░██║██║██║░░░██║██╔════╝██╔══██╗██╔════╝██╔══██╗██║░░░░░░░░░░░██╔══██╗██╔══██╗╚══██╔══╝
+██║░░░██║██╔██╗██║██║╚██╗░██╔╝█████╗░░██████╔╝╚█████╗░███████║██║░░░░░█████╗██████╦╝██║░░██║░░░██║░░░
+██║░░░██║██║╚████║██║░╚████╔╝░██╔══╝░░██╔══██╗░╚═══██╗██╔══██║██║░░░░░╚════╝██╔══██╗██║░░██║░░░██║░░░
+╚██████╔╝██║░╚███║██║░░╚██╔╝░░███████╗██║░░██║██████╔╝██║░░██║███████╗░░░░░░██████╦╝╚█████╔╝░░░██║░░░
+░╚═════╝░╚═╝░░╚══╝╚═╝░░░╚═╝░░░╚══════╝╚═╝░░╚═╝╚═════╝░╚═╝░░╚═╝╚══════╝░░░░░░╚═════╝░░╚════╝░░░░╚═╝░░░
+
+█▄▄ █▄█   █▀▄ █░█ █▀▀ █░█ █▀▀ █▀█   ▄▀   █▄░█ █ █▀█ █▀█ █▄▄ █░█ █▄█   ▀▄
+█▄█ ░█░   █▄▀ █▄█ █▄▄ █▀█ ██▄ █▀▄   ▀▄   █░▀█ █ █▀▀ █▀▀ █▄█ █▄█ ░█░   ▄▀
+
+( Программа запущена пользователем "{user}" )
+
+    """)
+    print( Fore.GREEN )
+    time.sleep(1.5)
+    print("Инструкция: Пожалуйста, выберите английский язык перед тем как запускать программу !")
+    print( Fore.RED )
+    time.sleep(1)
+    print("Предупреждение: Или же, \"UniversalBot\" не будет работать !")
+
+def main():
+    with open('LICENCE.txt', 'rb', 0) as file, \
+        mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as s:
+        if s.find(b'true') != -1:
+            with open('PREMIUM.txt', 'rb', 0) as file, \
+                mmap.mmap(file.fileno(), 0, access=mmap.ACCESS_READ) as s:
+                if s.find(b'qjodM2upsEv3MZH') != -1:
+                    print( Fore.MAGENTA + "\nУспех ! Конфиденциальность пользователя принята !\n")
+                    time.sleep(0.5)
+                    print( Fore.BLUE + "Премиум ключ был активирован ! В программу добавлены ещё больше возможностей !")
+                    time.sleep(1.5)
+                    start()
+                    print(Fore.MAGENTA)
+                    prefix = input("Write down bot prefix: " )
+                    print(Fore.MAGENTA)
+                    ask_command = input("Write down how many command bot should to execute ( MIN 1 - MAX 5 ): ")
+                    print(Fore.MAGENTA)
+                    if ask_command == "1":
+                        command = input("Write down bot first command: ")
+                        print(Fore.MAGENTA)
+                        command_time = float(input("Write down bot command duration: "))
+                        print(Fore.MAGENTA)
+                        cicle = float(input("Write down bot cicle: "))
+                        print( Fore.MAGENTA )
+                        print("Success !")
+                        countdown(10)
+                        pg.typewrite(f"{prefix}{command}", 0.3)
+                        pg.typewrite(["enter"])
+                        for pr in range(int(cicle - 1)):
+                            time.sleep(command_time)
+                            pg.typewrite(f"{prefix}{command}", 0.3)
+                            pg.typewrite(["enter"])
+                    elif ask_command == "2":
+                        command = input("Write down bot first command: ")
+                        print(Fore.MAGENTA)
+                        s_command = input("Write down bot second command: ")
+                        print(Fore.MAGENTA)
+                        command_time = float(input("Write down bot command duration: "))
+                        print(Fore.MAGENTA)
+                        cicle = float(input("Write down bot cicle: "))
+                        print( Fore.MAGENTA )
+                        print("Success !")
+                        countdown(10)
+                        pg.typewrite(f"{prefix}{command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{s_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        for pr in range(int(cicle - 1)):
+                            time.sleep(command_time)
+                            pg.typewrite(f"{prefix}{command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{s_command}", 0.3)
+                            pg.typewrite(["enter"])
+                    elif ask_command == "3":
+                        command = input("Write down bot first command: ")
+                        print(Fore.MAGENTA)
+                        s_command = input("Write down bot second command: ")
+                        print(Fore.MAGENTA)
+                        t_command = input("Write down bot third command: ")
+                        print(Fore.MAGENTA)
+                        command_time = float(input("Write down bot command duration: "))
+                        print(Fore.MAGENTA)
+                        cicle = float(input("Write down bot cicle: "))
+                        print( Fore.MAGENTA )
+                        print("Success !")
+                        countdown(10)
+                        pg.typewrite(f"{prefix}{command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{s_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{t_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        for pr in range(int(cicle - 1)):
+                            time.sleep(command_time)
+                            pg.typewrite(f"{prefix}{command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{s_command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{t_command}", 0.3)
+                            pg.typewrite(["enter"])
+                    elif ask_command == "4":
+                        command = input("Write down bot first command: ")
+                        print(Fore.MAGENTA)
+                        s_command = input("Write down bot second command: ")
+                        print(Fore.MAGENTA)
+                        t_command = input("Write down bot third command: ")
+                        print(Fore.MAGENTA)
+                        f_command = input("Write down bot fourth command: ")
+                        print(Fore.MAGENTA)
+                        command_time = float(input("Write down bot command duration: "))
+                        print(Fore.MAGENTA)
+                        cicle = float(input("Write down bot cicle: "))
+                        print( Fore.MAGENTA )
+                        print("Success !")
+                        countdown(10)
+                        pg.typewrite(f"{prefix}{command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{s_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{t_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{f_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        for pr in range(int(cicle - 1)):
+                            time.sleep(command_time)
+                            pg.typewrite(f"{prefix}{command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{s_command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{t_command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{f_command}", 0.3)
+                            pg.typewrite(["enter"])
+                    elif ask_command == "5":
+                        command = input("Write down bot first command: ")
+                        print(Fore.MAGENTA)
+                        s_command = input("Write down bot second command: ")
+                        print(Fore.MAGENTA)
+                        t_command = input("Write down bot third command: ")
+                        print(Fore.MAGENTA)
+                        f_command = input("Write down bot fourth command: ")
+                        print(Fore.MAGENTA)
+                        five_command = input("Write down bot fifth command: ")
+                        print(Fore.MAGENTA)
+                        command_time = float(input("Write down bot command duration: "))
+                        print(Fore.MAGENTA)
+                        cicle = float(input("Write down bot cicle: "))
+                        print( Fore.MAGENTA )
+                        print("Success !")
+                        countdown(10)
+                        pg.typewrite(f"{prefix}{command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{s_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{t_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{f_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        pg.typewrite(f"{prefix}{five_command}", 0.3)
+                        pg.typewrite(["enter"])
+                        for pr in range(int(cicle - 1)):
+                            time.sleep(command_time)
+                            pg.typewrite(f"{prefix}{command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{s_command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{t_command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{f_command}", 0.3)
+                            pg.typewrite(["enter"])
+                            pg.typewrite(f"{prefix}{five_command}", 0.3)
+                            pg.typewrite(["enter"])
+                    else:
+                        print( Fore.RED + "\nОшибка Терминала с ValueError\IndexError !")
+                        time.sleep(5)
+                        sys.exit()
+                else:
+                    print( Fore.RED + "\nПрограмма была запущена без Премиум-Ключа !")
+                    time.sleep(1.5)
+                    start()
+                    print(Fore.MAGENTA)
+                    prefix = input("Write down bot prefix: " )
+                    print(Fore.MAGENTA)
+                    ask_command = int(input("Write down how many command bot should to execute ( MAX 1 ): "))
+                    if ask_command > 1:
+                        print( Fore.RED + "Ошибка Терминала !" )
+                        time.sleep(5)
+                        sys.exit()
+                    print(Fore.MAGENTA)
+                    if ask_command == 1:
+                        command = input("Write down bot first command: ")
+                        print(Fore.MAGENTA)
+                        command_time = float(input("Write down bot command duration: "))
+                        print(Fore.MAGENTA)
+                        cicle = float(input("Write down bot cicle ( MAX 15 ): "))
+                        if cicle > 15:
+                            print( Fore.RED + "Ошибка Терминала !" )
+                            time.sleep(5)
+                            sys.exit()
+                        print( Fore.MAGENTA )
+                        print("Success !")
+                        countdown(10)
+                        pg.typewrite(f"{prefix}{command}", 0.3)
+                        pg.typewrite(["enter"])
+                        for pr in range(int(cicle - 1)):
+                            time.sleep(command_time)
+                            pg.typewrite(f"{prefix}{command}", 0.3)
+                            pg.typewrite(["enter"])
+                    else:
+                        print( Fore.RED + "\nОшибка Терминала с ValueError\IndexError !")
+                        time.sleep(5)
+                        sys.exit()
+        else:
+            print( Fore.RED + "\nПожалуйста, примите конфиденциальность пользователя в нашей программе !")
+            time.sleep(5)
+            sys.exit()
+
+if __name__ == "__main__":
+    main()</code>
+</body>
+</html>
